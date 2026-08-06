@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build stage ----
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM eclipse-temurin:25-jdk-jammy AS build
 WORKDIR /workspace
 
 COPY gradlew gradlew.bat ./
@@ -13,7 +13,7 @@ COPY src ./src
 RUN ./gradlew --no-daemon clean build -x integrationTest
 
 # ---- runtime stage ----
-FROM eclipse-temurin:21-jre-jammy AS runtime
+FROM eclipse-temurin:25-jre-jammy AS runtime
 WORKDIR /app
 
 RUN useradd --system --uid 10001 appuser
