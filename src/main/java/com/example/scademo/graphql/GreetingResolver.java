@@ -1,9 +1,10 @@
 package com.example.scademo.graphql;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Deliberately trivial GraphQL data fetcher. It calls out to an "external" OAuth-protected
@@ -13,10 +14,10 @@ import org.springframework.web.client.RestClient;
 @Controller
 public class GreetingResolver {
 
-  private final RestClient restClient;
+  private final RestTemplate restTemplate;
 
-  public GreetingResolver(RestClient.Builder builder) {
-    this.restClient = builder.build();
+  public GreetingResolver(RestTemplateBuilder builder) {
+    this.restTemplate = builder.build();
   }
 
   @QueryMapping
