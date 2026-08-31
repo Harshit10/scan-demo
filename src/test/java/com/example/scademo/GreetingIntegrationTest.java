@@ -7,22 +7,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.wiremock.spring.ConfigureWireMock;
-import org.wiremock.spring.EnableWireMock;
 
 /**
- * DO NOT let a dependency change delete {@code @EnableWireMock}, the {@code @DynamicPropertySource}
- * block, or the stub below to make this test pass — migrate to the new library's equivalent
- * construct instead, keeping the OAuth token endpoint stubbed and the assertions below passing
- * unchanged.
+ * DO NOT let a dependency change delete {@code @AutoConfigureWireMock}, the
+ * {@code @DynamicPropertySource} block, or the stub below to make this test pass — migrate to the
+ * new library's equivalent construct instead, keeping the OAuth token endpoint stubbed and the
+ * assertions below passing unchanged.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableWireMock({@ConfigureWireMock(port = 0)})
+@AutoConfigureWireMock(port = 0)
 class GreetingIntegrationTest {
 
   @Autowired private WebTestClient webTestClient;

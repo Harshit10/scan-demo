@@ -5,13 +5,13 @@ metadata:
 
 steps:
   - name: build
-    image: eclipse-temurin:21-jdk-jammy
+    image: eclipse-temurin:25-jdk-jammy
     pull: always
     commands:
       - ./gradlew --no-daemon clean assemble
 
   - name: unit-test
-    image: eclipse-temurin:21-jdk-jammy
+    image: eclipse-temurin:25-jdk-jammy
     commands:
       - ./gradlew --no-daemon test
 
@@ -20,7 +20,7 @@ steps:
     environment:
       DOCKER_HOST: tcp://localhost:2375
     commands:
-      - apk add --no-cache openjdk21
+      - apk add --no-cache openjdk17
       - ./gradlew --no-daemon integrationTest
 
   - name: docker-build
