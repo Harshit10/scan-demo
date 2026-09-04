@@ -3,11 +3,12 @@ package com.example.scademo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -21,8 +22,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
  * assertions below passing unchanged.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWireMock(port = 0)
 class GreetingIntegrationTest {
+
+  @RegisterExtension
+  static WireMockExtension wireMockServer = WireMockExtension.newInstance().build();
 
   @Autowired private WebTestClient webTestClient;
 
@@ -32,7 +35,7 @@ class GreetingIntegrationTest {
   static void oauthProperties(DynamicPropertyRegistry registry) {
     registry.add(
         "spring.security.oauth2.client.provider.downstream.token-uri",
-        () -> "http://localhost:${wiremock.server.port}/oauth/token");
+        () -> "http://localhost:" + wireMockServer.getPort() + "/oauth/token");
   }
 
   @BeforeEach

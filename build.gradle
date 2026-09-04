@@ -21,6 +21,10 @@ repositories {
 
 ext {
     set('springCloudVersion', springCloudVersion)
+    // GHSA-9xv2-5v5q-p794 / GHSA-gcx9-497g-6cp6 / GHSA-h3x4-894j-xpx5 (CVSS up to 9.8):
+    // Boot 4.1.1's managed tomcat.version (11.0.24) is vulnerable; override via the BOM's own
+    // property, not resolutionStrategy.force. 11.0.25 is Tomcat's fix version for all three.
+    set('tomcat.version', '11.0.25')
 }
 
 dependencyManagement {
@@ -30,19 +34,22 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
+    implementation 'org.springframework.boot:spring-boot-restclient'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
 
     // RestClient (used pre-downgrade) needs Spring Framework 6.1+; Boot 2.7's Spring
     // Framework 5.3 line only has RestTemplate. spring-cloud-starter-sleuth is the Boot
     // 2.7-era tracing stack (micrometer-tracing needs Boot 3's observability API).
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 
-    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+    testImplementation 'org.wiremock:wiremock:3.0.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.graphql:spring-graphql-test'
     testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
     testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
@@ -81,3 +88,4 @@ sonarqube {
         property 'sonar.projectKey', 'sca-demo'
     }
 }
+
